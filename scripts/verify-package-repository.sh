@@ -54,7 +54,9 @@ else
   [[ $ID == almalinux && $TEST_DISTRO == "el${VERSION_ID%%.*}" ]]
   el=${VERSION_ID%%.*}
   arch=$(uname -m)
-  dnf install -y ca-certificates gnupg2 coreutils grep sed
+  # Minimal EL images provide coreutils-single. Request commands by path so
+  # DNF can keep either coreutils implementation without a package conflict.
+  dnf install -y ca-certificates gnupg2 grep sed /usr/bin/install /usr/bin/tail
   install -m 644 /repo/RPM-GPG-KEY-wstunnel /etc/pki/rpm-gpg/RPM-GPG-KEY-wstunnel
   rpm --import /repo/RPM-GPG-KEY-wstunnel
   gpg --batch --import /repo/RPM-GPG-KEY-wstunnel
