@@ -1,0 +1,229 @@
+name: Publish apt and RPM repositories to Cloudflare Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Upstream stable tag to build (for example v11.0.0)'
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
+      sha:
+        required: true
+        type: string
+    secrets:
+      REPOSITORY_SIGNING_KEY:
+        required: true
+      REPOSITORY_SIGNING_KEY_PASSPHRASE:
+        required: false
+
+permissions:
+  contents: read
+
+env:
+  REPOSITORY_URL: https://wstunnel.repository.miru10.net
+  REPOSITORY_BRANCH: repository
+
+concurrency:
+  group: package-repositories-production
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      tag: ${{ steps.source.outputs.tag }}
+      sha: ${{ steps.source.outputs.sha }}
+      build: ${{ steps.plan.outputs.build }}
+      matrix: ${{ steps.plan.outputs.matrix }}
+      repository-head: ${{ steps.plan.outputs.repository_head }}
+      config-hash: ${{ steps.plan.outputs.config_hash }}
+    steps:
+      - name: Install git
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bash git ca-certificates jq gawk coreutils grep tar
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Resolve upstream tag
+        id: source
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+          EXPECTED_SHA: ${{ inputs.sha }}
+        run: |
+          set -euo pipefail
+          [[ $RELEASE_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          git fetch --no-tags https://github.com/erebe/wstunnel.git "refs/tags/$RELEASE_TAG"
+          sha=$(git rev-parse 'FETCH_HEAD^{commit}')
+          [[ -z $EXPECTED_SHA || $sha == "$EXPECTED_SHA" ]]
+          printf 'tag=%s\nsha=%s\n' "$RELEASE_TAG" "$sha" >> "$GITHUB_OUTPUT"
+      - name: Plan ten versions and reuse published packages
+        id: plan
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+          RELEASE_TAG: ${{ steps.source.outputs.tag }}
+          CONFIG_HASH: ${{ hashFiles('.github/workflows/publish-package-repositories.yaml', 'scripts/build-*.sh', 'scripts/*repository*.sh') }}
+          MANUAL: ${{ github.event_name == 'workflow_dispatch' }}
+        run: bash scripts/plan-repository-versions.sh
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: steps.plan.outputs.build == 'true'
+        with:
+          name: repository-plan
+          path: repository-plan/
+          retention-days: 1
+  build:
+    needs: prepare
+    if: needs.prepare.outputs.build == 'true'
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            bash git ca-certificates curl coreutils grep tar gzip xz-utils \
+            build-essential binutils musl-tools musl-dev clang libclang-dev cmake pkg-config
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: erebe/wstunnel
+          ref: ${{ matrix.sha }}
+          path: source
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master
+        with:
+          toolchain: '1.97'
+          targets: ${{ matrix.target }}
+      - name: Build binary from upstream tag
+        env:
+          BUILD_TARGET: ${{ matrix.target }}
+          DEB_ARCH: ${{ matrix.arch }}
+          RELEASE_TAG: ${{ matrix.tag }}
+        run: bash scripts/build-wstunnel-binary.sh
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: binary-${{ matrix.tag }}-${{ matrix.arch }}
+          path: |
+            binaries/binary-${{ matrix.tag }}-${{ matrix.arch }}/wstunnel
+            binaries/binary-${{ matrix.tag }}-${{ matrix.arch }}/LICENSE
+          retention-days: 7
+  package:
+    needs: [prepare, build]
+    runs-on: ubuntu-24.04
+    env:
+      VERSIONS_FILE: repository-plan/versions.txt
+      PREVIOUS_REPOSITORY_DIR: repository-plan/previous/public
+    steps:
+      - name: Install repository tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            bash git ca-certificates curl tar \
+            dpkg apt-utils gnupg gzip coreutils findutils gawk grep xz-utils rpm createrepo-c
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: repository-plan
+          path: repository-plan
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: binary-*
+          path: binaries
+          merge-multiple: false
+      - name: Authenticate retained packages
+        env:
+          REPOSITORY_SIGNING_KEY_FINGERPRINT: ${{ vars.REPOSITORY_SIGNING_KEY_FINGERPRINT }}
+        run: bash scripts/verify-retained-repository.sh
+      - name: Build signed apt repository from compiled binaries
+        env:
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
+          BINARIES_DIR: binaries
+          REPOSITORY_SIGNING_KEY: ${{ secrets.REPOSITORY_SIGNING_KEY }}
+          REPOSITORY_SIGNING_KEY_PASSPHRASE: ${{ secrets.REPOSITORY_SIGNING_KEY_PASSPHRASE }}
+          REPOSITORY_SIGNING_KEY_FINGERPRINT: ${{ vars.REPOSITORY_SIGNING_KEY_FINGERPRINT }}
+        run: bash scripts/build-apt-repository.sh
+      - name: Build signed EL9 and EL10 RPM repositories
+        env:
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
+          BINARIES_DIR: binaries
+          REPOSITORY_SIGNING_KEY: ${{ secrets.REPOSITORY_SIGNING_KEY }}
+          REPOSITORY_SIGNING_KEY_PASSPHRASE: ${{ secrets.REPOSITORY_SIGNING_KEY_PASSPHRASE }}
+          REPOSITORY_SIGNING_KEY_FINGERPRINT: ${{ vars.REPOSITORY_SIGNING_KEY_FINGERPRINT }}
+        run: bash scripts/build-rpm-repository.sh
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: package-repositories
+          path: public/
+          retention-days: 7
+  verify:
+    needs: [prepare, package]
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [ubuntu24.04, ubuntu26.04, el9, el10]
+        arch: [amd64, arm64]
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Install verification tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bash git ca-certificates coreutils podman
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: package-repositories
+          path: public
+      - name: Verify installation and startup on target distro
+        env:
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
+          TEST_DISTRO: ${{ matrix.distro }}
+          DEB_ARCH: ${{ matrix.arch }}
+        run: bash scripts/verify-package-repository.sh
+  publish:
+    needs: [prepare, verify]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Install deployment tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bash git ca-certificates curl coreutils
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: package-repositories
+          path: public
+      - name: Push repository branch with ten publication snapshots
+        env:
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
+          SOURCE_SHA: ${{ needs.prepare.outputs.sha }}
+          CONFIG_HASH: ${{ needs.prepare.outputs.config-hash }}
+          EXPECTED_REPOSITORY_HEAD: ${{ needs.prepare.outputs.repository-head }}
+        run: |
+          bash scripts/publish-repository.sh
+          printf 'Repository URL: %s\n' "$REPOSITORY_URL" >> "$GITHUB_STEP_SUMMARY"

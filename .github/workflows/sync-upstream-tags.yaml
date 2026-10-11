@@ -1,0 +1,41 @@
+name: Sync upstream tags and update package repositories
+
+on:
+  schedule:
+    - cron: '30 02 * * *' # 11:30 JST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Install tag sync tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bash git ca-certificates gawk coreutils
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Fetch and push upstream tags only
+        id: tags
+        run: bash scripts/sync-upstream-tags.sh
+    outputs:
+      tag: ${{ steps.tags.outputs.tag }}
+      sha: ${{ steps.tags.outputs.sha }}
+  packages:
+    needs: sync
+    uses: ./.github/workflows/publish-package-repositories.yaml
+    with:
+      tag: ${{ needs.sync.outputs.tag }}
+      sha: ${{ needs.sync.outputs.sha }}
+    secrets:
+      REPOSITORY_SIGNING_KEY: ${{ secrets.REPOSITORY_SIGNING_KEY }}
+      REPOSITORY_SIGNING_KEY_PASSPHRASE: ${{ secrets.REPOSITORY_SIGNING_KEY_PASSPHRASE }}
