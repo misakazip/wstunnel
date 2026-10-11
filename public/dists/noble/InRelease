@@ -1,0 +1,49 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Architectures: amd64 arm64
+Codename: noble
+Components: main
+Date: Sun, 11 Oct 2026 10:27:11 +0000
+Description: Built from upstream tags for Ubuntu
+Label: wstunnel
+Origin: wstunnel
+Suite: noble
+MD5Sum:
+ 3f7b8fe1a606db18fcef6b264e16e256              193 Release
+ 7bbaa7c0b54a2f868c3f3cce15199f27             6180 main/binary-amd64/Packages
+ 22935ef9303c27a80a5c61a158d5574c             2119 main/binary-amd64/Packages.gz
+ 846d18655e2d5adac21c08d812b56cfb             6173 main/binary-arm64/Packages
+ 632bc36229b963b342a11f8926202c85             2103 main/binary-arm64/Packages.gz
+SHA1:
+ 9894553601564070e472b061a7ce8618791f7544              193 Release
+ 1d8e38de80e5126a89e264e5d21689f0ab12edf8             6180 main/binary-amd64/Packages
+ 80851964f63fae23ce3c15513ec3610c9d4bd986             2119 main/binary-amd64/Packages.gz
+ b56347f3d3cc16a089dae8608be1e60d452c52f4             6173 main/binary-arm64/Packages
+ 00fafdaf2aa5f393a1851da174b6162c562e0f03             2103 main/binary-arm64/Packages.gz
+SHA256:
+ e46787aa50104bd88fafbaf059a0e8ec0ea70c1045573181c8aaf9f71b1865f8              193 Release
+ f33075ccdc163ede1bceaf555a059651bdfffdaf2430000a560062be7a7bf9ba             6180 main/binary-amd64/Packages
+ afe2bddc58c66d2d13dcd5d85e14a89880de46419146935589f02cf3aa951480             2119 main/binary-amd64/Packages.gz
+ 6d1a1894fb1effa0e9db6e586f9bf4f227dec6c979883f20ae16bac28f8dcc38             6173 main/binary-arm64/Packages
+ 613fc2590097ccfaef5c4005236a103d3b48c7506fedfaddeefd112386be4fc4             2103 main/binary-arm64/Packages.gz
+SHA512:
+ 410bc5eda73379529e88a023410c1bc147af5ff1421c6ee155f96700f92fb14f79926b4acd8ff8c549c3f902e773dd2d5fc9f9a1b5b486b8ab17d96aeed673a3              193 Release
+ 0939d52c7baf62e29c38f7e6813454226483b863fe64a9d7dcaa9bb9a63eacdc1642b6df634dcc79777a3eaa4322cd8fcd18a853e9429182881c21701307a009             6180 main/binary-amd64/Packages
+ 70ab24483355f840464e5dcddd50ca4c3399ef25181120c28d20c1013e723207ec176aad322bae453613da85bf03ff454465247c6681487a6e7f436da8f269bc             2119 main/binary-amd64/Packages.gz
+ 968bc49ffc97dc35d5fcdae40afd263c3a40c6e1f3a4450c9fef6e92a509f2f189ac9c0fa6e2424d294681f2dff97bc8389f107b6a96f9def103818cddf2c197             6173 main/binary-arm64/Packages
+ 6ce20d7a4431cede70b9584dbfaac3a2e755796ebe797e0ecb3602687d2dd48d281b310f5225d3a528e675e79040b164f14d77afe53eb8163ab19fec406c0176             2103 main/binary-arm64/Packages.gz
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEE6sv5DSvuFwufAoHpbpd7l3Y7ULEFAmrLZH8ACgkQbpd7l3Y7
+ULEU1gwAl43BX6y2vm5oht54X7bJoUMR1AQWacX4ZgdRdPk6b76yQmhgv8LVaUrm
+Ep6QcuTPbAiO18IaPjv7QNEn7R9f9m8IEDLHzwjj+NoqOSXAFR2VbrlVx5pzOc2b
+mjkI98pxQGLAtN8+GIGJQ1tAtWn4ZCOb+hy1brG6RCCm6LRNgEHyCVaVWds0Ab9K
+W6PaOsnELuKdp/55vACFK3imXS4dKDp7XBJkJ4DpVZAy7aDuGZewTZhhtya+wMc0
+XMXrF8fDF1vNGCKLBRbLo30mSVPKrFPAihdF7paT9ft6anq10DS3HWJWf6/O1ofi
+V7JR6yZ2co6OzptAe8aZ3FoUKcjjwaRSJa4MgfJTMvjFnhCNvQ/66ay7dZgYn024
+Mz693XFTj9FLAQpd6/XqrnsOq9uQ7ZBkr2biLN/ZsJ7s2RIp46eBCdn+DN0sJjsR
+jnyioX2E1eE5XP5bmamzoSujF280NbyQLcuyj/pcAhYHSEZ3sjpYJxtCa8CLdRtW
+qHPEM860
+=MJPD
+-----END PGP SIGNATURE-----

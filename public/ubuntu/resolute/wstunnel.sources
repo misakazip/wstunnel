@@ -1,0 +1,6 @@
+Types: deb
+URIs: https://wstunnel.repository.miru10.net
+Suites: resolute
+Components: main
+Architectures: amd64 arm64
+Signed-By: /usr/share/keyrings/wstunnel.gpg

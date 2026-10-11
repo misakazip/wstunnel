@@ -1,0 +1,160 @@
+Package: wstunnel
+Architecture: arm64
+Version: 10.5.2-1
+Priority: optional
+Section: net
+Maintainer: misakazip <git@misaka.zip>
+Installed-Size: 8981
+Filename: pool/main/w/wstunnel/wstunnel_10.5.2-1_arm64.deb
+Size: 2847380
+MD5sum: c957b8fd97c4be3e5bd541ba6b699a2a
+SHA1: bf5d22f3c76e3814fc70ce1644dc3f4a32888100
+SHA256: cccf20ac2a86c4113c8d385bff62109c57d5cd3cafdda031b063b5242bbe9007
+SHA512: 45675094e71683733f36beba661091afd1a0976a32a5d0eb8c9300188fa65826977f29a9f9bbd66628af070f4a871a61dbba7d5cb2d2559c85911ac0227cc5a9
+Homepage: https://github.com/erebe/wstunnel
+Description: Tunnel traffic over WebSocket or HTTP/2
+
+Package: wstunnel
+Architecture: arm64
+Version: 10.5.3-1
+Priority: optional
+Section: net
+Maintainer: misakazip <git@misaka.zip>
+Installed-Size: 8853
+Filename: pool/main/w/wstunnel/wstunnel_10.5.3-1_arm64.deb
+Size: 2825068
+MD5sum: 76fd979b773ff36de7bd8586a1a66d37
+SHA1: b62c722975c2ccb85643300b86e1ba68be998dcb
+SHA256: 224aa1f50a1a0ec754816484dbfdc9ae2e1abbaf0cb60f66f5e091094c376211
+SHA512: e323c388e208ba5334495f1642da937265b5b1b987765c7c0c4457a2e00f5f6a11a96822d64c87a0fa463c3b765e7227a0bcd4b4ce14aaa59b60f3f7c7c47be8
+Homepage: https://github.com/erebe/wstunnel
+Description: Tunnel traffic over WebSocket or HTTP/2
+
+Package: wstunnel
+Architecture: arm64
+Version: 10.5.4-1
+Priority: optional
+Section: net
+Maintainer: misakazip <git@misaka.zip>
+Installed-Size: 8853
+Filename: pool/main/w/wstunnel/wstunnel_10.5.4-1_arm64.deb
+Size: 2814120
+MD5sum: aa02738dd112fa7f7470bd5c8e26af48
+SHA1: 874aa52d2a26d4a7799957baf5963103830599a3
+SHA256: ccda5f15658517911d55e03fab55b00d64739d6026024c714979bcccd713e637
+SHA512: c76a24f458310ad85d7345885c088bfa423e0d57f2ad9abbfb12679e7918f5334799ed2e2066a4b39ac2eef67b9dfd91c484d47b38fd24777d868ae6933c8ca5
+Homepage: https://github.com/erebe/wstunnel
+Description: Tunnel traffic over WebSocket or HTTP/2
+
+Package: wstunnel
+Architecture: arm64
+Version: 10.5.5-1
+Priority: optional
+Section: net
+Maintainer: misakazip <git@misaka.zip>
+Installed-Size: 8853
+Filename: pool/main/w/wstunnel/wstunnel_10.5.5-1_arm64.deb
+Size: 2814704
+MD5sum: b79c2bdddb387fb20791c3fa865693b5
+SHA1: 7871b92e27fa3b1334477b4aad64e9981eb2e4c4
+SHA256: b0891936ae40fae2c33390e17deb90d6972f83ab7e1027ebe2cf1b65804499ab
+SHA512: 72fa5af5bd7928133a5fbf62f2e116d557ae4ff048c5cab1364e54c93240f9dfaef3d091fd7fa28d5addd71e487d9a889aba632a3f55064f6617cee44efee000
+Homepage: https://github.com/erebe/wstunnel
+Description: Tunnel traffic over WebSocket or HTTP/2
+
+Package: wstunnel
+Architecture: arm64
+Version: 10.6.0-1
+Priority: optional
+Section: net
+Maintainer: misakazip <git@misaka.zip>
+Installed-Size: 8853
+Filename: pool/main/w/wstunnel/wstunnel_10.6.0-1_arm64.deb
+Size: 2825608
+MD5sum: 1da3188e9718bdf846ca475449dd2c5e
+SHA1: 10cdc5ddccd4bd850c6c397a7d7bf7867972df49
+SHA256: 44290ff8778580b2eb84b238e046af8ef73eed9c3192c58959897608dddb0a15
+SHA512: 50b0889b4621128fd0883f246d6e3ee55da21e5728ad43d7b456d87399800aebbaa4e8a3e12edd1f02ab64a9d5d8a17c08c05f62c15e7b3f89838104401d7ce2
+Homepage: https://github.com/erebe/wstunnel
+Description: Tunnel traffic over WebSocket or HTTP/2
+
+Package: wstunnel
+Architecture: arm64
+Version: 10.6.1-1
+Priority: optional
+Section: net
+Maintainer: misakazip <git@misaka.zip>
+Installed-Size: 8853
+Filename: pool/main/w/wstunnel/wstunnel_10.6.1-1_arm64.deb
+Size: 2825972
+MD5sum: 8da1c2400131e35c82720f1e25d1d910
+SHA1: ed1ec22467301766f77ca151db5dbce218a9892f
+SHA256: 447a3ede34fb3ffeff972053e30a157102b99a32aec025de35e6df35c4fffe0c
+SHA512: 7d9e86eeab3a941958f8c20f6e1c936426e2d71661a6d17181291a9eec8a60e6fabb177a97de9393a8e5b3e9213887e2739a62e5b7589b1317779dd1e94ba204
+Homepage: https://github.com/erebe/wstunnel
+Description: Tunnel traffic over WebSocket or HTTP/2
+
+Package: wstunnel
+Architecture: arm64
+Version: 10.6.2-1
+Priority: optional
+Section: net
+Maintainer: misakazip <git@misaka.zip>
+Installed-Size: 8917
+Filename: pool/main/w/wstunnel/wstunnel_10.6.2-1_arm64.deb
+Size: 2844184
+MD5sum: 9559d581a681f7a012aa17a06bd3f4a5
+SHA1: 3ef77a099309f28b05bade56d21c83fe10fc653d
+SHA256: d68b443bcdbca2889dc2463b2004b196a7899e6b23c7f483f709b2e566619e89
+SHA512: 5afcd027f8b1544947aca5d4de0cab3088436789a71c6653ab7725bfc291fb01f2305b0afbef3a6b6f975a1d68d38eae6b19b7190d0538f6ed6725489b43c4dd
+Homepage: https://github.com/erebe/wstunnel
+Description: Tunnel traffic over WebSocket or HTTP/2
+
+Package: wstunnel
+Architecture: arm64
+Version: 10.7.0-1
+Priority: optional
+Section: net
+Maintainer: misakazip <git@misaka.zip>
+Installed-Size: 10073
+Filename: pool/main/w/wstunnel/wstunnel_10.7.0-1_arm64.deb
+Size: 3185228
+MD5sum: c54fe4f51708910534a5c1e25bfb465d
+SHA1: d7eaa77ab5feabc1b22fd6be8ef0d117baebf69b
+SHA256: feb68cf7ba2c149b1629053b2968abbbaa34da52ae683772d60fbfa16d10a70e
+SHA512: 3c9e6d29109a8a009617a29cdc4a112ab1c93f507696a280cd589321ac65a6c8e068ee82a976a2eac9fed5fc53e4bc98ec4c4cf633b6eb4cf65e31da210092b4
+Homepage: https://github.com/erebe/wstunnel
+Description: Tunnel traffic over WebSocket or HTTP/2
+
+Package: wstunnel
+Architecture: arm64
+Version: 10.7.1-1
+Priority: optional
+Section: net
+Maintainer: misakazip <git@misaka.zip>
+Installed-Size: 10073
+Filename: pool/main/w/wstunnel/wstunnel_10.7.1-1_arm64.deb
+Size: 3191092
+MD5sum: 686635dcb01e2d0bcf638cd7cc2b4866
+SHA1: ff9beab85027867d22432a19a4f42cdffce45bc3
+SHA256: 9453f1afbf8207e5be430d8db5f1d13b21ef1bbe4a3c8764892db99625a7b65e
+SHA512: 63e3a7f47c75a19bdc6f59785a997b82e57f573062def02a4f1677496f6bbc41a1dce425f46bdf40540c27be2fcc7a94ab2cbe15b4d5528403712700505f54ca
+Homepage: https://github.com/erebe/wstunnel
+Description: Tunnel traffic over WebSocket or HTTP/2
+
+Package: wstunnel
+Architecture: arm64
+Version: 11.0.0-1
+Priority: optional
+Section: net
+Maintainer: misakazip <git@misaka.zip>
+Installed-Size: 10137
+Filename: pool/main/w/wstunnel/wstunnel_11.0.0-1_arm64.deb
+Size: 3206844
+MD5sum: 138a8a0fbe44563a24424f8a93d7dca8
+SHA1: 9e5412ab77a3a41344ff38212d028540df49eb7b
+SHA256: ab809ce3a5f2e51270d2910330570cbbb33525867837a12c21115917d2829d00
+SHA512: eef9b456d89dc1969e2040c1f254c4104a8b03e4192bbf2c5f529aea3eb8dffea5ecf0609ceaf9ccc584a5a26f5be009ecb72e963262b3e409ad14ab811aa781
+Homepage: https://github.com/erebe/wstunnel
+Description: Tunnel traffic over WebSocket or HTTP/2
+
