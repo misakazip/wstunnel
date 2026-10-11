@@ -18,6 +18,8 @@ on:
     secrets:
       REPOSITORY_SIGNING_KEY:
         required: true
+      REPOSITORY_SIGNING_KEY_FINGERPRINT:
+        required: true
       REPOSITORY_SIGNING_KEY_PASSPHRASE:
         required: false
 
@@ -146,7 +148,7 @@ jobs:
           merge-multiple: false
       - name: Authenticate retained packages
         env:
-          REPOSITORY_SIGNING_KEY_FINGERPRINT: ${{ vars.REPOSITORY_SIGNING_KEY_FINGERPRINT }}
+          REPOSITORY_SIGNING_KEY_FINGERPRINT: ${{ secrets.REPOSITORY_SIGNING_KEY_FINGERPRINT }}
         run: bash scripts/verify-retained-repository.sh
       - name: Build signed apt repository from compiled binaries
         env:
@@ -154,7 +156,7 @@ jobs:
           BINARIES_DIR: binaries
           REPOSITORY_SIGNING_KEY: ${{ secrets.REPOSITORY_SIGNING_KEY }}
           REPOSITORY_SIGNING_KEY_PASSPHRASE: ${{ secrets.REPOSITORY_SIGNING_KEY_PASSPHRASE }}
-          REPOSITORY_SIGNING_KEY_FINGERPRINT: ${{ vars.REPOSITORY_SIGNING_KEY_FINGERPRINT }}
+          REPOSITORY_SIGNING_KEY_FINGERPRINT: ${{ secrets.REPOSITORY_SIGNING_KEY_FINGERPRINT }}
         run: bash scripts/build-apt-repository.sh
       - name: Build signed EL9 and EL10 RPM repositories
         env:
@@ -162,7 +164,7 @@ jobs:
           BINARIES_DIR: binaries
           REPOSITORY_SIGNING_KEY: ${{ secrets.REPOSITORY_SIGNING_KEY }}
           REPOSITORY_SIGNING_KEY_PASSPHRASE: ${{ secrets.REPOSITORY_SIGNING_KEY_PASSPHRASE }}
-          REPOSITORY_SIGNING_KEY_FINGERPRINT: ${{ vars.REPOSITORY_SIGNING_KEY_FINGERPRINT }}
+          REPOSITORY_SIGNING_KEY_FINGERPRINT: ${{ secrets.REPOSITORY_SIGNING_KEY_FINGERPRINT }}
         run: bash scripts/build-rpm-repository.sh
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
