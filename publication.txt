@@ -1,4 +1,4 @@
 format=wstunnel-repository-v1
 tag=v11.0.0
 source_sha=e6b70fdfc421ccf79fc003ed520b228f06c79f7d
-config_hash=c890e9692a2d09b7af20c99f2d69eba79d4236d7a21d9790d06b4cd53583087c
+config_hash=572b85b036e1895c32bba4f1647ad32051a36d4c8122590bdc4f7c43e8ae9081
