@@ -16,6 +16,7 @@ for tool in dpkg-deb apt-ftparchive gpg gzip stat; do
 done
 
 [[ ! -e public ]] || die 'public/ already exists; use a clean output directory'
+scripts_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 tag=$RELEASE_TAG
 [[ $tag =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || die "Unsupported stable release tag: $tag"
 source "$(dirname "${BASH_SOURCE[0]}")/repository-versions.sh"
@@ -110,22 +111,8 @@ cat > _headers <<'EOF'
   Cache-Control: no-cache
   X-Content-Type-Options: nosniff
 EOF
-cat > index.html <<EOF
-<!doctype html><title>wstunnel packages</title>
-<h1>wstunnel package repositories</h1><p>Release: $tag</p>
-<p>Latest ${#versions[@]} package versions are available. <a href="/versions.txt">Version list</a></p>
-<p>Repository URL: <a href="$repository_url">$repository_url</a></p>
-<p>Ubuntu 24.04 (noble), 26.04 (resolute): main; amd64, arm64.</p>
-<p>Enterprise Linux 9, 10: /rpm/el9/, /rpm/el10/; x86_64, aarch64.</p>
-<ul>
-<li><a href="/ubuntu/noble/wstunnel.sources">Ubuntu 24.04 apt configuration</a></li>
-<li><a href="/ubuntu/resolute/wstunnel.sources">Ubuntu 26.04 apt configuration</a></li>
-<li><a href="/rpm/el9/wstunnel.repo">EL9 dnf configuration</a></li>
-<li><a href="/rpm/el10/wstunnel.repo">EL10 dnf configuration</a></li>
-</ul>
-<a href="/wstunnel.gpg">Repository signing key</a>
-<a href="/RPM-GPG-KEY-wstunnel">RPM signing key</a>
-EOF
+REPOSITORY_VERSION_COUNT=${#versions[@]} REPOSITORY_URL="$repository_url" \
+  bash "$scripts_dir/render-repository-index.sh" > index.html
 while IFS= read -r -d '' file; do
   (( $(stat -c %s "$file") <= 25 * 1024 * 1024 )) || \
     die "Cloudflare Pages 25 MiB file limit exceeded: $file"
