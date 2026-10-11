@@ -7,6 +7,9 @@
   <br/>
 </p>
 
+**This fork and the APT/RPM repositories hosted at https://wstunnel.repository.miru10.net are unofficial.**
+They are maintained independently of [upstream wstunnel](https://github.com/erebe/wstunnel). These packages are not provided or maintained by the upstream project.
+
 ## Summary
 
 * [Description](#description)
@@ -14,9 +17,109 @@
 * [Command line](#cmd)
 * [Examples](#examples)
 * [Release](#release)
+* [Unofficial APT and RPM repositories](#package-repositories)
 * [Note](#note)
 * [Benchmark](#bench)
 * [How to build](#build)
+
+## Unofficial APT and RPM repositories <a name="package-repositories"></a>
+
+These repositories provide signed packages built from upstream stable release tags.
+They support Ubuntu 24.04 / 26.04 and EL9 / EL10 on x86_64 and ARM64, retaining the latest 10 versions.
+The repository signing key is RSA 3072 with UID `misakazip <git@misaka.zip>`.
+Its **full primary key fingerprint** is:
+
+```text
+EACB F90D 2BEE 170B 9F02 81E9 6E97 7B97 763B 50B1
+```
+
+The procedures below check the downloaded key against this fingerprint. Use the full fingerprint,
+not the short key ID or the fingerprint of a signing subkey. For independent confirmation, obtain
+the fingerprint from the repository maintainer through a trusted channel. Do not use the downloaded
+key itself as the source of the expected value.
+
+The commands below run in Bash. They display the key, compare its primary fingerprint with the
+expected value, and stop before registration if the fingerprints differ or the key file contains
+multiple primary keys. Keep the parentheses: they make a verification failure stop the procedure
+without closing your terminal.
+
+### Ubuntu 24.04 / 26.04
+
+```bash
+(
+set -euo pipefail
+sudo apt update
+sudo apt install -y ca-certificates curl gnupg
+repository_tmp=$(mktemp -d)
+trap 'rm -rf -- "$repository_tmp"' EXIT
+curl -fsSLo "$repository_tmp/wstunnel.gpg" \
+  https://wstunnel.repository.miru10.net/wstunnel.gpg
+gpg --show-keys --with-fingerprint "$repository_tmp/wstunnel.gpg"
+expected_fingerprint='EACBF90D2BEE170B9F0281E96E977B97763B50B1'
+actual_fingerprint=$(gpg --batch --show-keys --with-colons "$repository_tmp/wstunnel.gpg" |
+  awk -F: '$1 == "pub" { primary = 1; next }
+    primary && $1 == "fpr" { print $10; primary = 0 }')
+expected_fingerprint=$(printf '%s' "$expected_fingerprint" | tr -d '[:space:]' | tr '[:lower:]' '[:upper:]')
+if [[ ! $expected_fingerprint =~ ^([0-9A-F]{40}|[0-9A-F]{64})$ ||
+      "$actual_fingerprint" != "$expected_fingerprint" ]]; then
+  printf 'Signing key fingerprint mismatch; repository registration aborted.\n' >&2
+  exit 1
+fi
+printf 'Signing key fingerprint verified: %s\n' "$actual_fingerprint"
+sudo install -D -m 644 "$repository_tmp/wstunnel.gpg" /usr/share/keyrings/wstunnel.gpg
+source /etc/os-release
+curl -fsSLo "$repository_tmp/wstunnel.sources" \
+  "https://wstunnel.repository.miru10.net/ubuntu/$VERSION_CODENAME/wstunnel.sources"
+sudo install -D -m 644 "$repository_tmp/wstunnel.sources" /etc/apt/sources.list.d/wstunnel.sources
+sudo apt update
+sudo apt install wstunnel
+)
+```
+
+APT verifies the signed `InRelease` metadata and package checksums using the key specified by
+`Signed-By` in `wstunnel.sources`. A successful `apt update` confirms that the repository metadata
+passes APT's signature checks; installation checks the downloaded package against that metadata.
+For subsequent updates, run `sudo apt update && sudo apt upgrade`.
+
+### EL9 / EL10 (AlmaLinux, Rocky Linux, RHEL, and compatible distributions)
+
+```bash
+(
+set -euo pipefail
+sudo dnf install -y ca-certificates curl gnupg2
+repository_tmp=$(mktemp -d)
+trap 'rm -rf -- "$repository_tmp"' EXIT
+curl -fsSLo "$repository_tmp/RPM-GPG-KEY-wstunnel" \
+  https://wstunnel.repository.miru10.net/RPM-GPG-KEY-wstunnel
+gpg --show-keys --with-fingerprint "$repository_tmp/RPM-GPG-KEY-wstunnel"
+expected_fingerprint='EACBF90D2BEE170B9F0281E96E977B97763B50B1'
+actual_fingerprint=$(gpg --batch --show-keys --with-colons "$repository_tmp/RPM-GPG-KEY-wstunnel" |
+  awk -F: '$1 == "pub" { primary = 1; next }
+    primary && $1 == "fpr" { print $10; primary = 0 }')
+expected_fingerprint=$(printf '%s' "$expected_fingerprint" | tr -d '[:space:]' | tr '[:lower:]' '[:upper:]')
+if [[ ! $expected_fingerprint =~ ^([0-9A-F]{40}|[0-9A-F]{64})$ ||
+      "$actual_fingerprint" != "$expected_fingerprint" ]]; then
+  printf 'Signing key fingerprint mismatch; repository registration aborted.\n' >&2
+  exit 1
+fi
+printf 'Signing key fingerprint verified: %s\n' "$actual_fingerprint"
+sudo install -D -m 644 "$repository_tmp/RPM-GPG-KEY-wstunnel" /etc/pki/rpm-gpg/RPM-GPG-KEY-wstunnel
+sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-wstunnel
+source /etc/os-release
+el=${VERSION_ID%%.*}
+curl -fsSLo "$repository_tmp/wstunnel.repo" \
+  "https://wstunnel.repository.miru10.net/rpm/el$el/wstunnel.repo"
+sudo install -D -m 644 "$repository_tmp/wstunnel.repo" /etc/yum.repos.d/wstunnel.repo
+sudo dnf --disablerepo='*' --enablerepo=wstunnel makecache --refresh
+sudo dnf install wstunnel
+)
+```
+
+The repository configuration enables `repo_gpgcheck=1` for metadata signatures and `gpgcheck=1`
+for RPM package signatures. DNF may ask to import the key for metadata verification; confirm only
+if its full fingerprint matches the verified value above. A successful `makecache` verifies the
+repository metadata, and DNF verifies the RPM signature during installation.
+For subsequent updates, run `sudo dnf upgrade wstunnel`.
 
 ## Description <a name="description"></a>
 
