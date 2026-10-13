@@ -13,8 +13,7 @@ touch repository-plan/previous/public/empty-repository
 git fetch --quiet --no-tags https://github.com/erebe/wstunnel.git \
   'refs/tags/*:refs/wstunnel-upstream/tags/*'
 [[ $(git rev-parse "refs/wstunnel-upstream/tags/$RELEASE_TAG^{commit}") == "$SOURCE_SHA" ]]
-git for-each-ref --format='%(refname:strip=3)' refs/wstunnel-upstream/tags \
-  | awk '/^v[0-9]+\.[0-9]+\.[0-9]+$/' | sort -V > repository-plan/upstream-tags
+bash "$(dirname "${BASH_SOURCE[0]}")/list-upstream-versions.sh" > repository-plan/upstream-tags
 awk -v selected="$RELEASE_TAG" '{ print; if ($0 == selected) exit }' \
   repository-plan/upstream-tags | tail -n 10 | sort -Vr > repository-plan/versions.txt
 [[ $(head -n 1 repository-plan/versions.txt) == "$RELEASE_TAG" ]]

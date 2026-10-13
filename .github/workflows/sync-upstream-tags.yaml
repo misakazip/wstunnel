@@ -15,6 +15,8 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       - name: Install tag sync tools
         run: |
@@ -23,8 +25,8 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: main
-          fetch-depth: 0
-      - name: Fetch and push upstream tags only
+          persist-credentials: false
+      - name: Fetch upstream tags and select the latest stable version
         id: tags
         run: bash scripts/sync-upstream-tags.sh
     outputs:

@@ -70,7 +70,7 @@ jobs:
         env:
           SOURCE_SHA: ${{ steps.source.outputs.sha }}
           RELEASE_TAG: ${{ steps.source.outputs.tag }}
-          CONFIG_HASH: ${{ hashFiles('.github/workflows/publish-package-repositories.yaml', 'scripts/build-*.sh', 'scripts/*repository*.sh') }}
+          CONFIG_HASH: ${{ hashFiles('.github/workflows/publish-package-repositories.yaml', 'scripts/build-*.sh', 'scripts/*repository*.sh', 'scripts/*upstream*.sh') }}
           MANUAL: ${{ github.event_name == 'workflow_dispatch' }}
         run: bash scripts/plan-repository-versions.sh
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
