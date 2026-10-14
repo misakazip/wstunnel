@@ -150,11 +150,11 @@ Section: net
 Maintainer: misakazip <git@misaka.zip>
 Installed-Size: 12794
 Filename: pool/main/w/wstunnel/wstunnel_11.0.0-1_amd64.deb
-Size: 3724572
-MD5sum: bd649952e2281f0b510300c03b00a65d
-SHA1: 9d472de07c41ecef30791c5f858b05aa57dd339f
-SHA256: 16d8680fe089cc252dab4cd77f305dd9333dce04f5865b695094e70fd2a1b870
-SHA512: 897ee231d830704d435eeb850c7a24949fe2f53302e52827c80177033a6230cadef9af6807b26647c20a931b6fad457d1d199fdf35aae241ded2f3f00b1872a0
+Size: 3725060
+MD5sum: 6a9f8325cf990a5ca867d4d9c64a4be0
+SHA1: f127b758adb996cfd2860231a1362dcf1b86ebe4
+SHA256: dac4864fe23d84f0f66c25ee00e2399d41106f8de2c6960dd90052692573b1cb
+SHA512: a48e55394ccb1bf3956f0370a25986357046da7e484b4707030d21a37164ad85ad49129b58b5622e4e631ba71ab7ec436b7fc121cee7e06f4cc5c19ad2cc2c6f
 Homepage: https://github.com/erebe/wstunnel
 Description: Tunnel traffic over WebSocket or HTTP/2
 
